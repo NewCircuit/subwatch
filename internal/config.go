@@ -1,7 +1,6 @@
-package helpers
+package internal
 
 import (
-	"fmt"
 	"github.com/go-yaml/yaml"
 	"io/ioutil"
 	"log"
@@ -9,10 +8,10 @@ import (
 )
 
 type Config struct {
-	Token      string
-	Prefix     string
-	NotificationChannel string
-	Roles []string
+	Token               string   `yaml:"token"`
+	Prefix              string   `yaml:"prefix"`
+	NotificationChannel string   `yaml:"channel"`
+	Roles               []string `yaml:"roles"`
 }
 
 // This will get the current configuration file. If it doesn't exist then a
@@ -38,13 +37,13 @@ func GetConfig(location string) (config Config) {
 	return config
 }
 
-// This will create a new configuration file
+// This will create a new configuration file.
 func genConfig(location string) Config {
 	newConfig := Config{
-		Token: "",
-		Prefix: ".role-watcher",
+		Token:               "",
+		Prefix:              ".role-watcher",
 		NotificationChannel: "",
-		Roles: []string{"718524998234669108", "718464650194452511", "719805582969798677", "718454001279959071", "721112261283807273", "719544792828215398", "718607495437746207", "722864056284872784", "718453523057999952", "718816943452323880"},
+		Roles:               []string{"1", "2", "3", "4"},
 	}
 
 	serialized, err := yaml.Marshal(newConfig)
@@ -59,6 +58,5 @@ func genConfig(location string) Config {
 		panic(err)
 	}
 
-	fmt.Println("Config has been generated, please take a look at " + location)
 	return GetConfig(location)
 }

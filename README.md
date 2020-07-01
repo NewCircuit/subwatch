@@ -1,30 +1,14 @@
-# Role watcher
-A Discord bot feature that will send a notification if a member doesn't have any of the roles set in ``config.yml``
+# Subcription Watch
+This is Floor Gang bot, it watches for non-paying members
 
-[Trello card - claimed by @Elian0213](https://trello.com/c/0k7DwbSX)
-
-# Usage
-The commands to use this service are as follows:
+## Usage
 ```
-# Create or destroy an role id
-.[syntax-command] [add | delete] "role id"
-```
-
-# Configuration
-Configuration is possible in ``config.yml``
-
-```yaml
-"token": "",
-"prefix": ".role-watcher",
-"notificationchannel": "",
-"roles":
-    - "role id"
+$ go build
+$ ./subwatch
+$ ... edit config.yml ...
+$ ./subwatch
 ```
 
-# Setup
-Download golang if you haven't already at https://golang.org/dl/ after that install the packages 
-
-```
-$ go get
-$ go build 
-```
+## Bot Usage
+The bot will then emit to the channel (given in the config.yml) when someone 
+is missing the required roles (`roles` in config.yml). 

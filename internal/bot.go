@@ -52,6 +52,7 @@ func (b *Bot) onReady(_ *discordgo.Session, ready *discordgo.Ready) {
 }
 
 func (b *Bot) onMemberUpdate(_ *discordgo.Session, member *discordgo.GuildMemberUpdate) {
+	// Ignore other guilds
 	if member.GuildID != b.config.Guild {
 		return
 	}
@@ -60,7 +61,9 @@ func (b *Bot) onMemberUpdate(_ *discordgo.Session, member *discordgo.GuildMember
 	}
 }
 
+// check if they have at least one of the required roles from the config.
 func (b Bot) checkRoles(userRoles []string) bool {
+
 	for _, role := range userRoles {
 		if hasRole(role, b.config.Roles) {
 			return true
@@ -79,7 +82,7 @@ func (b Bot) sendEmbed(member *discordgo.Member) {
 		Color:       0xff0000,
 		Description: fmt.Sprintf("<@%s> needs to be checked up on", member.User.ID),
 		Timestamp:   time.Now().Format(time.RFC3339),
-		Title:       "Role watcher ⚠",
+		Title:       "Sub Watcher ⚠",
 	}
 
 	_, err := b.client.ChannelMessageSendEmbed(b.config.NotificationChannel, &embed)

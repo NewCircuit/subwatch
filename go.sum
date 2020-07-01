@@ -4,6 +4,8 @@ github.com/Floor-Gang/utility-package v0.0.0-20200701132541-ee11a019d90b h1:I2AP
 github.com/Floor-Gang/utility-package v0.0.0-20200701132541-ee11a019d90b/go.mod h1:TzR6NaswSqgeABlo86E220LHn0pcsMGwFHeopxyaONk=
 github.com/Floor-Gang/utilpkg v0.0.0-20200701183240-c8e7da20437f h1:z7tGKjWE8OqMnWn9N0bxzBcvoJZvB1e3wMH5oBcCUMg=
 github.com/Floor-Gang/utilpkg v0.0.0-20200701183240-c8e7da20437f/go.mod h1:z6V4RsuXjH9PwW8db89XchibYnsaau9+LjfpXg2nhq4=
+github.com/Floor-Gang/utilpkg v0.0.0-20200701192533-1d33bcedf7a1 h1:jrNbdR3TmdRfeQoS/YvWc7hnLSj7qTT42ao+K3saWwI=
+github.com/Floor-Gang/utilpkg v0.0.0-20200701192533-1d33bcedf7a1/go.mod h1:z6V4RsuXjH9PwW8db89XchibYnsaau9+LjfpXg2nhq4=
 github.com/bwmarrin/discordgo v0.21.1 h1:UI2PWwzvn5IFuscYcDc6QB/duhs9MUIjQ4HclcIZisc=
 github.com/bwmarrin/discordgo v0.21.1/go.mod h1:c1WtWUGN6nREDmzIpyTp/iD3VYt4Fpx+bVyfBG7JE+M=
 github.com/go-yaml/yaml v2.1.0+incompatible h1:RYi2hDdss1u4YE7GwixGzWwVo47T8UQwnTLB6vQiq+o=

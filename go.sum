@@ -1,0 +1,14 @@
+github.com/Floor-Gang/authclient v0.0.0-20200701030010-b8a9026b2da8 h1:o0XV7D2phcR5bDi7AP8m7+x5rm+7Pki6ar/GI2DuZl4=
+github.com/Floor-Gang/authclient v0.0.0-20200701030010-b8a9026b2da8/go.mod h1:I0qmN/m/+qKnJmJXk81OTW3shZxZw9K8u+Mz4Ke8fCM=
+github.com/Floor-Gang/utility-package v0.0.0-20200701132541-ee11a019d90b h1:I2APUiQdNTNmkQjTNOuUdeQ4rXsSKP8APpgpZfamVEs=
+github.com/Floor-Gang/utility-package v0.0.0-20200701132541-ee11a019d90b/go.mod h1:TzR6NaswSqgeABlo86E220LHn0pcsMGwFHeopxyaONk=
+github.com/Floor-Gang/utilpkg v0.0.0-20200701183240-c8e7da20437f h1:z7tGKjWE8OqMnWn9N0bxzBcvoJZvB1e3wMH5oBcCUMg=
+github.com/Floor-Gang/utilpkg v0.0.0-20200701183240-c8e7da20437f/go.mod h1:z6V4RsuXjH9PwW8db89XchibYnsaau9+LjfpXg2nhq4=
+github.com/bwmarrin/discordgo v0.21.1 h1:UI2PWwzvn5IFuscYcDc6QB/duhs9MUIjQ4HclcIZisc=
+github.com/bwmarrin/discordgo v0.21.1/go.mod h1:c1WtWUGN6nREDmzIpyTp/iD3VYt4Fpx+bVyfBG7JE+M=
+github.com/go-yaml/yaml v2.1.0+incompatible h1:RYi2hDdss1u4YE7GwixGzWwVo47T8UQwnTLB6vQiq+o=
+github.com/go-yaml/yaml v2.1.0+incompatible/go.mod h1:w2MrLa16VYP0jy6N7M5kHaCkaLENm+P+Tv+MfurjSw0=
+github.com/gorilla/websocket v1.4.0 h1:WDFjx/TMzVgy9VdMMQi2K2Emtwi2QcUQsztZ/zLaH/Q=
+github.com/gorilla/websocket v1.4.0/go.mod h1:E7qHFY5m1UJ88s3WnNqhKjPHQ0heANvMoAMk2YaljkQ=
+golang.org/x/crypto v0.0.0-20181030102418-4d3f4d9ffa16 h1:y6ce7gCWtnH+m3dCjzQ1PCuwl28DDIc3VNnvY29DlIA=
+golang.org/x/crypto v0.0.0-20181030102418-4d3f4d9ffa16/go.mod h1:6SG95UA2DQfeDnfUPMdvaQW0Q7yPrPDi9nlGo2tz2b4=

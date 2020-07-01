@@ -12,6 +12,7 @@ type Config struct {
 	Prefix              string   `yaml:"prefix"`
 	NotificationChannel string   `yaml:"channel"`
 	Roles               []string `yaml:"roles"`
+	Auth                string   `yaml:"auth_server"`
 }
 
 // This will get the current configuration file. If it doesn't exist then a
@@ -41,9 +42,10 @@ func GetConfig(location string) (config Config) {
 func genConfig(location string) Config {
 	newConfig := Config{
 		Token:               "",
-		Prefix:              ".role-watcher",
+		Prefix:              ".subwatch",
 		NotificationChannel: "",
 		Roles:               []string{"1", "2", "3", "4"},
+		Auth:                "localhost:6969",
 	}
 
 	serialized, err := yaml.Marshal(newConfig)

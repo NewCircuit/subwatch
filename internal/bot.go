@@ -24,7 +24,7 @@ func Start(config Config, configLocation string) {
 	client.Identify.Intents = intents
 
 	// Setup Authentication client
-	auth, err := auth.GetClient(config.Auth)
+	authClient, err := auth.GetClient(config.Auth)
 
 	if err != nil {
 		log.Fatalln("Failed to connect to authentication server because \n" + err.Error())
@@ -34,7 +34,7 @@ func Start(config Config, configLocation string) {
 		config:  config,
 		client:  client,
 		confLoc: configLocation,
-		auth:    auth,
+		auth:    authClient,
 	}
 
 	// Add event listeners
@@ -52,6 +52,9 @@ func (b *Bot) onReady(_ *discordgo.Session, ready *discordgo.Ready) {
 }
 
 func (b *Bot) onMemberUpdate(_ *discordgo.Session, member *discordgo.GuildMemberUpdate) {
+	if member.GuildID != b.config.Guild {
+		return
+	}
 	if !b.checkRoles(member.Roles) {
 		b.sendEmbed(member.Member)
 	}

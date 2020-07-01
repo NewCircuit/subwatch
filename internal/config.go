@@ -1,10 +1,9 @@
 package internal
 
 import (
-	"github.com/go-yaml/yaml"
-	"io/ioutil"
+	util "github.com/Floor-Gang/utilpkg"
 	"log"
-	"os"
+	"strings"
 )
 
 type Config struct {
@@ -13,52 +12,25 @@ type Config struct {
 	NotificationChannel string   `yaml:"channel"`
 	Roles               []string `yaml:"roles"`
 	Auth                string   `yaml:"auth_server"`
+	Guild               string   `yaml:"guild"`
 }
 
 // This will get the current configuration file. If it doesn't exist then a
 // new one will be made.
 func GetConfig(location string) (config Config) {
-	// Check if the config file exists, if it doesn't create one with a
-	// template.
-	if _, err := os.Stat("config.yml"); err != nil {
-		genConfig(location)
-		log.Fatalln("Created a default config.")
-	}
-
-	// Config file exists, so we're reading it.
-	file, err := ioutil.ReadFile(location)
-
-	if err != nil {
-		log.Fatalln("Failed to read config file\n" + err.Error())
-	}
-
-	// Parse the yml file
-	_ = yaml.Unmarshal(file, &config)
-
-	return config
-}
-
-// This will create a new configuration file.
-func genConfig(location string) Config {
-	newConfig := Config{
+	config = Config{
 		Token:               "",
 		Prefix:              ".subwatch",
 		NotificationChannel: "",
 		Roles:               []string{"1", "2", "3", "4"},
-		Auth:                "localhost:6969",
+		Auth:                "",
+		Guild:               "",
+	}
+	err := util.GetConfig(location, &config)
+
+	if err != nil && strings.Contains(err.Error(), "default configuration") {
+		log.Fatalln("A default configuration has been made.")
 	}
 
-	serialized, err := yaml.Marshal(newConfig)
-
-	if err != nil {
-		panic(err)
-	}
-
-	err = ioutil.WriteFile(location, serialized, 0660)
-
-	if err != nil {
-		panic(err)
-	}
-
-	return GetConfig(location)
+	return config
 }

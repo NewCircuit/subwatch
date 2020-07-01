@@ -2,6 +2,7 @@ package internal
 
 import (
 	"fmt"
+	auth "github.com/Floor-Gang/authclient"
 	"github.com/bwmarrin/discordgo"
 	"log"
 	"time"
@@ -11,27 +12,35 @@ type Bot struct {
 	config  Config
 	client  *discordgo.Session
 	confLoc string
+	auth    auth.AuthClient
 }
 
 func Start(config Config, configLocation string) {
-	client, err := discordgo.New("Bot " + config.Token)
+	// Setup Discord
+	client, _ := discordgo.New("Bot " + config.Token)
+
+	// This is required
 	intents := discordgo.MakeIntent(discordgo.IntentsGuildMembers + discordgo.IntentsGuildMessages)
+	client.Identify.Intents = intents
+
+	// Setup Authentication client
+	auth, err := auth.GetClient(config.Auth)
 
 	if err != nil {
-		panic(err)
+		log.Fatalln("Failed to connect to authentication server because \n" + err.Error())
 	}
-
-	client.Identify.Intents = intents
 
 	bot := Bot{
 		config:  config,
 		client:  client,
 		confLoc: configLocation,
+		auth:    auth,
 	}
 
+	// Add event listeners
 	client.AddHandler(bot.onReady)
 	client.AddHandler(bot.onMemberUpdate)
-	//client.AddHandler(bot.onMessage)
+	client.AddHandler(bot.onMessage)
 
 	if err = client.Open(); err != nil {
 		log.Fatalln("Failed to connect to Discord, was an access token provided?\n" + err.Error())
@@ -77,4 +86,11 @@ func (b Bot) sendEmbed(member *discordgo.Member) {
 	} else {
 		log.Printf("Reported %s in %s\n", member.User.Username, b.config.NotificationChannel)
 	}
+}
+
+func (b Bot) reply(event *discordgo.MessageCreate, context string) (*discordgo.Message, error) {
+	return b.client.ChannelMessageSend(
+		event.ChannelID,
+		fmt.Sprintf("<@%s> %s", event.Author.ID, context),
+	)
 }

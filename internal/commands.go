@@ -1,10 +1,10 @@
 package internal
 
 import (
-	"fmt"
 	dg "github.com/bwmarrin/discordgo"
 	"github.com/go-yaml/yaml"
 	"io/ioutil"
+	"log"
 	"strings"
 )
 
@@ -15,21 +15,32 @@ func (b *Bot) onMessage(_ *dg.Session, message *dg.MessageCreate) {
 
 	args := strings.Split(message.Content, " ")
 
-	fmt.Println(args)
-
-	if len(args) < 2 {
+	if len(args) < 3 {
 		return
+	}
+
+	auth, err := b.auth.Auth(message.Author.ID)
+
+	if err != nil {
+		log.Printf("Failed to authentication \"%s\", because\n%s", message.Author.ID, err.Error())
 	}
 
 	switch args[1] {
 	case "add":
-		response := b.addRole(args[2], message.Author.ID, message.GuildID)
-		_, _ = b.client.ChannelMessageSend(message.ChannelID, response)
+		if auth.IsAdmin {
+			response := b.addRole(args[2], message.Author.ID, message.GuildID)
+			_, _ = b.reply(message, response)
+		} else {
+			_, _ = b.reply(message, "You don't have permissions to run this command.")
+		}
 		break
 	case "delete":
-		response := b.removeRole(args[2], message.Author.ID)
-		fmt.Println("delete")
-		_, _ = b.client.ChannelMessageSend(message.ChannelID, response)
+		if auth.IsAdmin {
+			response := b.removeRole(args[2], message.Author.ID)
+			_, _ = b.reply(message, response)
+		} else {
+			_, _ = b.reply(message, "You don't have permissions to run this command.")
+		}
 		break
 	}
 }
@@ -46,11 +57,11 @@ func (b *Bot) addRole(roleID string, userID string, guildID string) string {
 	}
 
 	if !roleExists {
-		return fmt.Sprintf("<@%s> Role doesn't exist", userID)
+		return "Role doesn't exist"
 	}
 
 	if hasRole(roleID, b.config.Roles) {
-		return fmt.Sprintf("<@%s> role was already in the config!", userID)
+		return "role was already in the config!"
 	}
 
 	b.config.Roles = append(b.config.Roles, roleID)
@@ -66,12 +77,12 @@ func (b *Bot) addRole(roleID string, userID string, guildID string) string {
 		panic(err)
 	}
 
-	return fmt.Sprintf("<@%s> role added!", userID)
+	return "role added!"
 }
 
 func (b *Bot) removeRole(roleID string, userID string) string {
 	if !hasRole(roleID, b.config.Roles) {
-		return fmt.Sprintf("<@%s> role wasn't found and therefor couldn't be removed", userID)
+		return "role wasn't found and therefor couldn't be removed"
 	}
 
 	b.config.Roles = removeFromSlice(roleID, b.config.Roles)
@@ -88,5 +99,5 @@ func (b *Bot) removeRole(roleID string, userID string) string {
 		panic(err)
 	}
 
-	return fmt.Sprintf("<@%s> role removed!", userID)
+	return "role removed!"
 }

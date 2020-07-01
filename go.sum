@@ -1,3 +1,5 @@
+github.com/Floor-Gang/authclient v0.0.0-20200701030010-b8a9026b2da8 h1:o0XV7D2phcR5bDi7AP8m7+x5rm+7Pki6ar/GI2DuZl4=
+github.com/Floor-Gang/authclient v0.0.0-20200701030010-b8a9026b2da8/go.mod h1:I0qmN/m/+qKnJmJXk81OTW3shZxZw9K8u+Mz4Ke8fCM=
 github.com/bwmarrin/discordgo v0.21.1 h1:UI2PWwzvn5IFuscYcDc6QB/duhs9MUIjQ4HclcIZisc=
 github.com/bwmarrin/discordgo v0.21.1/go.mod h1:c1WtWUGN6nREDmzIpyTp/iD3VYt4Fpx+bVyfBG7JE+M=
 github.com/go-yaml/yaml v2.1.0+incompatible h1:RYi2hDdss1u4YE7GwixGzWwVo47T8UQwnTLB6vQiq+o=

@@ -76,7 +76,7 @@ func (b Bot) checkRoles(userRoles []string) bool {
 func (b Bot) sendEmbed(member *discordgo.Member) {
 	embed := discordgo.MessageEmbed{
 		Author: &discordgo.MessageEmbedAuthor{
-			Name:    member.User.Username,
+			Name:    fmt.Sprintf("%s#%s", member.User.Username, member.User.Discriminator),
 			IconURL: member.User.AvatarURL(""),
 		},
 		Color:       0xff0000,

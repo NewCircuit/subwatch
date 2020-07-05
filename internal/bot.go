@@ -38,32 +38,67 @@ func Start(config Config, configLocation string) {
 	}
 
 	// Add event listeners
-	client.AddHandler(bot.onReady)
-	client.AddHandler(bot.onMemberUpdate)
+	client.AddHandlerOnce(bot.onReady)
 	client.AddHandler(bot.onMessage)
 
-	if err = client.Open(); err != nil {
+	if err := client.Open(); err != nil {
 		log.Fatalln("Failed to connect to Discord, was an access token provided?\n" + err.Error())
 	}
 }
 
 func (b *Bot) onReady(_ *discordgo.Session, ready *discordgo.Ready) {
 	log.Printf("Ready as %s#%s\n", ready.User.Username, ready.User.Discriminator)
+	b.reviewGuild()	
+	ticker := time.NewTicker(5 * time.Minute)
+
+	go func() {
+		for {
+			select {
+			case <- ticker.C:
+				b.reviewGuild()
+			}
+		}
+	}()
+
 }
 
-func (b *Bot) onMemberUpdate(_ *discordgo.Session, member *discordgo.GuildMemberUpdate) {
-	// Ignore other guilds
-	if member.GuildID != b.config.Guild {
+func (b *Bot) reviewGuild() {
+	result := "**__SubWatch__** ⚠\nThese people need to be checked up on:\n"
+	members := ""
+	b.reviewMembers("", &members)
+
+	if len(members) > 0 {
+		_, err := b.client.ChannelMessageSend(b.config.NotificationChannel, result + members)
+		if err != nil {
+			log.Printf("Failed to send a report to \"%s\" because\n%s\n", b.config.NotificationChannel, err.Error())
+		}
+	}
+}
+ 
+func (b *Bot) reviewMembers(memberID string, result *string) {
+	members, err := b.client.GuildMembers(b.config.Guild, "", 1000)
+	var last string
+
+	if err != nil {
+		log.Printf("Failed to fetch members for \"%s\" because\n%s\n", b.config.Guild, err.Error())
 		return
 	}
-	if !b.checkRoles(member.Roles) {
-		b.sendEmbed(member.Member)
+
+	for _, member := range members {
+		if !b.checkRoles(member.Roles) {
+			*result += fmt.Sprintf(" - %s#%s (<@%s>)\n", member.User.Username, member.User.Discriminator, member.User.ID)
+		}
+		last = member.User.ID
 	}
+
+	if len(members) == 1000 {
+		b.reviewMembers(last, result)
+	}
+
 }
 
 // check if they have at least one of the required roles from the config.
 func (b Bot) checkRoles(userRoles []string) bool {
-
 	for _, role := range userRoles {
 		if hasRole(role, b.config.Roles) {
 			return true
@@ -71,27 +106,6 @@ func (b Bot) checkRoles(userRoles []string) bool {
 	}
 
 	return false
-}
-
-func (b Bot) sendEmbed(member *discordgo.Member) {
-	embed := discordgo.MessageEmbed{
-		Author: &discordgo.MessageEmbedAuthor{
-			Name:    fmt.Sprintf("%s#%s", member.User.Username, member.User.Discriminator),
-			IconURL: member.User.AvatarURL(""),
-		},
-		Color:       0xff0000,
-		Description: fmt.Sprintf("<@%s> needs to be checked up on", member.User.ID),
-		Timestamp:   time.Now().Format(time.RFC3339),
-		Title:       "Sub Watcher ⚠",
-	}
-
-	_, err := b.client.ChannelMessageSendEmbed(b.config.NotificationChannel, &embed)
-
-	if err != nil {
-		log.Printf("Failed to report %s in %s, because \n%s\n", member.User.Username, b.config.NotificationChannel, err.Error())
-	} else {
-		log.Printf("Reported %s in %s\n", member.User.Username, b.config.NotificationChannel)
-	}
 }
 
 func (b Bot) reply(event *discordgo.MessageCreate, context string) (*discordgo.Message, error) {

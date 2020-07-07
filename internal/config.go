@@ -7,24 +7,28 @@ import (
 )
 
 type Config struct {
-	Token               string   `yaml:"token"`
-	Prefix              string   `yaml:"prefix"`
-	NotificationChannel string   `yaml:"channel"`
-	Roles               []string `yaml:"roles"`
-	Auth                string   `yaml:"auth_server"`
-	Guild               string   `yaml:"guild"`
+	Prefix              string   `yaml:"prefix"`      // command prefix
+	NotificationChannel string   `yaml:"channel"`     // channel to report to
+	Guild               string   `yaml:"guild"`       // guild to listen to
+	Roles               []string `yaml:"roles"`       // minimum required roles
+	Auth                string   `yaml:"auth_server"` // auth server (github.com/authserver)
+	Intervals           int      `yaml:"intervals"`   // minute-intervals to check the server
+	UpVote              string   `yaml:"up_vote"`     // kick & inform
+	DownVote            string   `yaml:"down_vote"`   // discard
 }
 
 // This will get the current configuration file. If it doesn't exist then a
 // new one will be made.
 func GetConfig(location string) (config Config) {
 	config = Config{
-		Token:               "",
 		Prefix:              ".subwatch",
 		NotificationChannel: "",
 		Roles:               []string{"1", "2", "3", "4"},
 		Auth:                "",
 		Guild:               "",
+		UpVote:              "",
+		DownVote:            "",
+		Intervals:           5,
 	}
 	err := util.GetConfig(location, &config)
 

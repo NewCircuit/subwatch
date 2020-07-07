@@ -74,7 +74,7 @@ func (b *Bot) reviewGuild() {
 			)
 		}
 	} else {
-		cest, _ := time.LoadLocation("CEST")
+		cest, _ := time.LoadLocation("Netherlands/Amsterdam")
 		hour, min, _ := time.Now().In(cest).Clock()
 		b.client.ChannelEditComplex(
 			b.config.NotificationChannel,

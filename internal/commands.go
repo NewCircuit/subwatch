@@ -1,50 +1,11 @@
 package internal
 
 import (
-	dg "github.com/bwmarrin/discordgo"
 	"github.com/go-yaml/yaml"
 	"io/ioutil"
-	"log"
-	"strings"
 )
 
-func (b *Bot) onMessage(_ *dg.Session, message *dg.MessageCreate) {
-	if len(message.GuildID) == 0 || !strings.HasPrefix(message.Content, b.config.Prefix) {
-		return
-	}
-
-	args := strings.Split(message.Content, " ")
-
-	if len(args) < 3 {
-		return
-	}
-
-	auth, err := b.auth.Auth(message.Author.ID)
-
-	if err != nil {
-		log.Printf("Failed to authentication \"%s\", because\n%s", message.Author.ID, err.Error())
-	}
-
-	switch args[1] {
-	case "add":
-		if auth.IsAdmin {
-			response := b.addRole(args[2], message.Author.ID, message.GuildID)
-			_, _ = b.reply(message, response)
-		} else {
-			_, _ = b.reply(message, "You don't have permissions to run this command.")
-		}
-		break
-	case "delete":
-		if auth.IsAdmin {
-			response := b.removeRole(args[2], message.Author.ID)
-			_, _ = b.reply(message, response)
-		} else {
-			_, _ = b.reply(message, "You don't have permissions to run this command.")
-		}
-		break
-	}
-}
-
+// add a new required role. the bot's response is what's returned
 func (b *Bot) addRole(roleID string, userID string, guildID string) string {
 	roleExists := false
 	allRoles, _ := b.client.GuildRoles(guildID)

@@ -74,9 +74,13 @@ func (b *Bot) reviewGuild() {
 			)
 		}
 	} else {
-		b.client.ChannelMessageSend(
+		cest, _ := time.LoadLocation("Netherlands/Amsterdam")
+		hour, min, _ := time.Now().In(cest).Clock()
+		b.client.ChannelEditComplex(
 			b.config.NotificationChannel,
-			"**__SubWatch__**\nNo one to check-up on.",
+			&discordgo.ChannelEdit{
+				Topic: fmt.Sprintf("Last Checked: %d:%d CEST", hour, min),
+			},
 		)
 	}
 }

@@ -36,12 +36,12 @@ func Start(config Config, configLocation string) {
 				{
 					Name:        "add",
 					Description: "Add another role",
-					Example:     []string{"add", "<role ID>"},
+					Example:     []string{"add", "role ID"},
 				},
 				{
 					Name:        "delete",
 					Description: "Remove a role",
-					Example:     []string{"remove", "<role ID>"},
+					Example:     []string{"remove", "role ID"},
 				},
 			},
 			CommandPrefix: config.Prefix,

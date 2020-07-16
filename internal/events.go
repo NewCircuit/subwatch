@@ -32,7 +32,7 @@ func (b *Bot) onMessage(_ *dg.Session, message *dg.MessageCreate) {
 	switch args[1] {
 	case "add":
 		if auth.IsAdmin {
-			response := b.addRole(args[2], message.Author.ID, message.GuildID)
+			response := b.addRole(args[2], message.GuildID)
 			_, _ = util.Reply(b.client, message.Message, response)
 		} else {
 			_, _ = util.Reply(
@@ -44,7 +44,7 @@ func (b *Bot) onMessage(_ *dg.Session, message *dg.MessageCreate) {
 		break
 	case "delete":
 		if auth.IsAdmin {
-			response := b.removeRole(args[2], message.Author.ID)
+			response := b.removeRole(args[2])
 			_, _ = util.Reply(b.client, message.Message, response)
 		} else {
 			_, _ = util.Reply(
@@ -94,7 +94,7 @@ func (b *Bot) onReaction(_ *dg.Session, reaction *dg.MessageReactionAdd) {
 				reaction.ChannelID,
 				"Report discarded.",
 			)
-			b.client.ChannelMessageDelete(
+			_ = b.client.ChannelMessageDelete(
 				reaction.ChannelID,
 				reaction.MessageID,
 			)

@@ -47,9 +47,8 @@ func Start(config Config, configLocation string) {
 			CommandPrefix: config.Prefix,
 		},
 	)
-
 	if err != nil {
-		log.Fatalln("Failed to register with the authenticaiton server\n" + err.Error())
+		log.Fatalln("Failed to register with the authentication server\n" + err.Error())
 	}
 
 	// Setup Discord

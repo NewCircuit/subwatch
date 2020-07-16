@@ -1,8 +1,9 @@
-# Subcription Watch
+# Subscription Watch
 This is Floor Gang bot, it watches for non-paying members
 
 ## Usage
 ```
+$ cd ./cmd/subwatch
 $ go build
 $ ./subwatch
 $ ... edit config.yml ...

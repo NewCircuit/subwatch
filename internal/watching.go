@@ -31,7 +31,7 @@ func (b *Bot) reviewGuild() {
 		" * upvote: **notify & kick**\n" +
 		" * downvote: **discard**\n"
 	members := ""
-	memberIDs := []string{}
+	var memberIDs []string
 	b.reviewMembers("", &members, &memberIDs)
 
 	if len(members) > 0 {
@@ -76,10 +76,18 @@ func (b *Bot) reviewGuild() {
 	} else {
 		cest, _ := time.LoadLocation("Europe/Amsterdam")
 		hour, min, _ := time.Now().In(cest).Clock()
-		b.client.ChannelEditComplex(
+		channelTopic := fmt.Sprintf("Last Checked: %d:", hour)
+		if min < 10 {
+			channelTopic += fmt.Sprintf("%d0", min)
+		} else {
+			channelTopic += fmt.Sprintf("%d", min)
+		}
+		channelTopic += " CEST"
+
+		_, _ = b.client.ChannelEditComplex(
 			b.config.NotificationChannel,
 			&discordgo.ChannelEdit{
-				Topic: fmt.Sprintf("Last Checked: %d:%d CEST", hour, min),
+				Topic: channelTopic,
 			},
 		)
 	}

@@ -6,7 +6,7 @@ import (
 )
 
 // add a new required role. the bot's response is what's returned
-func (b *Bot) addRole(roleID string, userID string, guildID string) string {
+func (b *Bot) addRole(roleID string, guildID string) string {
 	roleExists := false
 	allRoles, _ := b.client.GuildRoles(guildID)
 
@@ -41,7 +41,7 @@ func (b *Bot) addRole(roleID string, userID string, guildID string) string {
 	return "role added!"
 }
 
-func (b *Bot) removeRole(roleID string, userID string) string {
+func (b *Bot) removeRole(roleID string) string {
 	if !hasRole(roleID, b.config.Roles) {
 		return "role wasn't found and therefor couldn't be removed"
 	}

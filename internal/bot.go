@@ -18,6 +18,7 @@ type Bot struct {
 type Report struct {
 	MemberIDs []string
 	ReportID  string
+	Cancel    chan bool
 }
 
 func Start(config Config, configLocation string) {
@@ -84,9 +85,9 @@ func Start(config Config, configLocation string) {
 }
 
 // check if they have at least one of the required roles from the config.
-func (b Bot) checkRoles(userRoles []string) bool {
+func (bot Bot) checkRoles(userRoles []string) bool {
 	for _, role := range userRoles {
-		if hasRole(role, b.config.Roles) {
+		if hasRole(role, bot.config.Roles) {
 			return true
 		}
 	}
@@ -95,43 +96,43 @@ func (b Bot) checkRoles(userRoles []string) bool {
 }
 
 // kick all the given member IDs
-func (b *Bot) kickMembers(members []string) (failures []string) {
+func (bot *Bot) kickMembers(members []string) string {
+	var result = "**SubWatch Report - Conclusion**\n"
+
 	for _, memberID := range members {
 		// first DM the member
-		dmChannel, err := b.client.UserChannelCreate(memberID)
+		dmChannel, dmErr := bot.client.UserChannelCreate(memberID)
+		user, _ := bot.client.User(memberID)
 
-		if err == nil {
-			_, err = b.client.ChannelMessageSend(
+		if dmErr == nil {
+			_, dmErr = bot.client.ChannelMessageSend(
 				dmChannel.ID,
 				"Renew your membership",
 			)
 		}
-
-		// if we failed to contact them then don't kick them.
-		if err != nil {
-			failures = append(
-				failures,
-				fmt.Sprintf("Couldn't contact <@%s>", memberID),
-			)
-			continue
-		}
-
-		// then kick them if they were dm'd
-		err = b.client.GuildMemberDeleteWithReason(
-			b.config.Guild,
+		// then kick them
+		kickErr := bot.client.GuildMemberDeleteWithReason(
+			bot.config.Guild,
 			memberID,
 			"Renew your membership",
 		)
 
-		if err != nil {
-			failures = append(
-				failures,
-				fmt.Sprintf(
-					"Couldn't kick <@%s>, do I have the perms?",
-					memberID,
-				),
-			)
+		// if we failed to contact then let them know
+		if dmErr != nil {
+			result += fmt.Sprintf(" - %s#%s (failed to notify & ❌", user.Username, user.Discriminator)
+		} else {
+			result += fmt.Sprintf(" - %s#%s (notified & ", user.Username, user.Discriminator)
 		}
+
+		if kickErr == nil && dmErr != nil {
+			result += "kicked anyways)"
+		} else if kickErr == nil && dmErr == nil {
+			result += "kicked)"
+		} else {
+			result += "failed to kick do I have the required perms?)"
+		}
+		result += "\n"
+
 	}
-	return failures
+	return result
 }

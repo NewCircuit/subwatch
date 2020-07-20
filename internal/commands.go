@@ -6,9 +6,9 @@ import (
 )
 
 // add a new required role. the bot's response is what's returned
-func (b *Bot) addRole(roleID string, guildID string) string {
+func (bot *Bot) addRole(roleID string, guildID string) string {
 	roleExists := false
-	allRoles, _ := b.client.GuildRoles(guildID)
+	allRoles, _ := bot.client.GuildRoles(guildID)
 
 	for _, item := range allRoles {
 		if item.ID == roleID {
@@ -21,18 +21,18 @@ func (b *Bot) addRole(roleID string, guildID string) string {
 		return "Role doesn't exist"
 	}
 
-	if hasRole(roleID, b.config.Roles) {
+	if hasRole(roleID, bot.config.Roles) {
 		return "role was already in the config!"
 	}
 
-	b.config.Roles = append(b.config.Roles, roleID)
-	serialized, err := yaml.Marshal(b.config)
+	bot.config.Roles = append(bot.config.Roles, roleID)
+	serialized, err := yaml.Marshal(bot.config)
 
 	if err != nil {
 		panic(err)
 	}
 
-	err = ioutil.WriteFile(b.confLoc, serialized, 0660)
+	err = ioutil.WriteFile(bot.confLoc, serialized, 0660)
 
 	if err != nil {
 		panic(err)
@@ -41,20 +41,20 @@ func (b *Bot) addRole(roleID string, guildID string) string {
 	return "role added!"
 }
 
-func (b *Bot) removeRole(roleID string) string {
-	if !hasRole(roleID, b.config.Roles) {
+func (bot *Bot) removeRole(roleID string) string {
+	if !hasRole(roleID, bot.config.Roles) {
 		return "role wasn't found and therefor couldn't be removed"
 	}
 
-	b.config.Roles = removeFromSlice(roleID, b.config.Roles)
+	bot.config.Roles = removeFromSlice(roleID, bot.config.Roles)
 
-	serialized, err := yaml.Marshal(b.config)
+	serialized, err := yaml.Marshal(bot.config)
 
 	if err != nil {
 		panic(err)
 	}
 
-	err = ioutil.WriteFile(b.confLoc, serialized, 0660)
+	err = ioutil.WriteFile(bot.confLoc, serialized, 0660)
 
 	if err != nil {
 		panic(err)

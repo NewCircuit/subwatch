@@ -1,15 +1,14 @@
 package internal
 
 import (
-	"fmt"
 	util "github.com/Floor-Gang/utilpkg"
 	dg "github.com/bwmarrin/discordgo"
 	"log"
 	"strings"
 )
 
-func (b *Bot) onMessage(_ *dg.Session, message *dg.MessageCreate) {
-	if len(message.GuildID) == 0 || !strings.HasPrefix(message.Content, b.config.Prefix) {
+func (bot *Bot) onMessage(_ *dg.Session, message *dg.MessageCreate) {
+	if len(message.GuildID) == 0 || !strings.HasPrefix(message.Content, bot.config.Prefix) {
 		return
 	}
 
@@ -19,7 +18,7 @@ func (b *Bot) onMessage(_ *dg.Session, message *dg.MessageCreate) {
 		return
 	}
 
-	auth, err := b.auth.Auth(message.Author.ID)
+	auth, err := bot.auth.Auth(message.Author.ID)
 
 	if err != nil {
 		log.Printf(
@@ -32,11 +31,11 @@ func (b *Bot) onMessage(_ *dg.Session, message *dg.MessageCreate) {
 	switch args[1] {
 	case "add":
 		if auth.IsAdmin {
-			response := b.addRole(args[2], message.GuildID)
-			_, _ = util.Reply(b.client, message.Message, response)
+			response := bot.addRole(args[2], message.GuildID)
+			_, _ = util.Reply(bot.client, message.Message, response)
 		} else {
 			_, _ = util.Reply(
-				b.client,
+				bot.client,
 				message.Message,
 				"You don't have permissions to run this command.",
 			)
@@ -44,11 +43,11 @@ func (b *Bot) onMessage(_ *dg.Session, message *dg.MessageCreate) {
 		break
 	case "delete":
 		if auth.IsAdmin {
-			response := b.removeRole(args[2])
-			_, _ = util.Reply(b.client, message.Message, response)
+			response := bot.removeRole(args[2])
+			_, _ = util.Reply(bot.client, message.Message, response)
 		} else {
 			_, _ = util.Reply(
-				b.client,
+				bot.client,
 				message.Message,
 				"You don't have permissions to run this command.",
 			)
@@ -57,48 +56,18 @@ func (b *Bot) onMessage(_ *dg.Session, message *dg.MessageCreate) {
 	}
 }
 
-func (b *Bot) onReaction(_ *dg.Session, reaction *dg.MessageReactionAdd) {
-	if report, ok := b.reports[reaction.MessageID]; ok {
+func (bot *Bot) onReaction(_ *dg.Session, reaction *dg.MessageReactionAdd) {
+	if report, isOK := bot.reports[reaction.MessageID]; isOK {
 		// ignore bot
-		if reaction.UserID == b.client.State.User.ID {
+		if reaction.UserID == bot.client.State.User.ID {
 			return
 		}
 
 		// ignore emojis that aren't upvote or downvote
-		if reaction.Emoji.ID != b.config.UpVote && reaction.Emoji.ID != b.config.DownVote {
+		if reaction.Emoji.ID != bot.config.DownVote {
 			return
 		}
 
-		toKick := reaction.Emoji.ID == b.config.UpVote
-
-		if toKick {
-			failures := b.kickMembers(report.MemberIDs)
-
-			if len(failures) > 0 {
-				failureReport := "Failures:\n"
-				for _, failure := range failures {
-					failureReport += fmt.Sprintf(" - %s\n", failure)
-				}
-				_, _ = b.client.ChannelMessageSend(
-					reaction.ChannelID,
-					failureReport,
-				)
-			} else {
-				_, _ = b.client.ChannelMessageSend(
-					reaction.ChannelID,
-					"They've all been kicked!",
-				)
-			}
-		} else {
-			_, _ = b.client.ChannelMessageSend(
-				reaction.ChannelID,
-				"Report discarded.",
-			)
-			_ = b.client.ChannelMessageDelete(
-				reaction.ChannelID,
-				reaction.MessageID,
-			)
-		}
-		delete(b.reports, report.ReportID)
+		report.Cancel <- true
 	}
 }

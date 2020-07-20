@@ -34,6 +34,8 @@ func (bot *Bot) reviewGuild() {
 	// if there are members to kick, then send a report
 	if len(memberIDs) > 0 {
 		bot.startReport(members, memberIDs)
+	} else {
+		log.Println("I just reviewed the guild, no reports.")
 	}
 
 	// update the notification channel that the bot is still scanning.
@@ -41,7 +43,7 @@ func (bot *Bot) reviewGuild() {
 	hour, min, _ := time.Now().In(cest).Clock()
 	channelTopic := fmt.Sprintf("Last Checked: %d:", hour)
 	if min < 10 {
-		channelTopic += fmt.Sprintf("%d0", min)
+		channelTopic += fmt.Sprintf("0%d", min)
 	} else {
 		channelTopic += strconv.Itoa(min)
 	}
@@ -53,7 +55,6 @@ func (bot *Bot) reviewGuild() {
 			Topic: channelTopic,
 		},
 	)
-	log.Println(channelTopic)
 }
 
 func (bot *Bot) startReport(summary string, memberIDs []string) {

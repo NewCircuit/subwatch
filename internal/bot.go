@@ -119,7 +119,7 @@ func (bot *Bot) kickMembers(members []string) string {
 
 		// if we failed to contact then let them know
 		if dmErr != nil {
-			result += fmt.Sprintf(" - %s#%s (failed to notify & ❌", user.Username, user.Discriminator)
+			result += fmt.Sprintf(" - %s#%s (failed to notify & ", user.Username, user.Discriminator)
 		} else {
 			result += fmt.Sprintf(" - %s#%s (notified & ", user.Username, user.Discriminator)
 		}

@@ -43,7 +43,7 @@ func (bot *Bot) addRole(roleID string, guildID string) string {
 
 func (bot *Bot) removeRole(roleID string) string {
 	if !hasRole(roleID, bot.config.Roles) {
-		return "role wasn't found and therefor couldn't be removed"
+		return "role wasn't found and therefore couldn't be removed"
 	}
 
 	bot.config.Roles = removeFromSlice(roleID, bot.config.Roles)

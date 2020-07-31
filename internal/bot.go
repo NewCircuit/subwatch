@@ -29,7 +29,7 @@ func Start(config Config, configLocation string) {
 		log.Fatalln("Failed to connect to authentication server because \n" + err.Error())
 	}
 
-	register, err := authClient.Register(
+	_, err = authClient.Register(
 		auth.Feature{
 			Name:        "SubWatch",
 			Description: "This is responsible for reporting users that aren't paying anymore.",
@@ -53,7 +53,7 @@ func Start(config Config, configLocation string) {
 	}
 
 	// Setup Discord
-	client, _ := discordgo.New(register.Token)
+	client, _ := discordgo.New("Bot " + config.Token)
 
 	// Declare intents
 	intents := discordgo.MakeIntent(

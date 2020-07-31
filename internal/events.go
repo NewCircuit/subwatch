@@ -1,7 +1,7 @@
 package internal
 
 import (
-	util "github.com/Floor-Gang/utilpkg"
+	util "github.com/Floor-Gang/utilpkg/botutil"
 	dg "github.com/bwmarrin/discordgo"
 	"log"
 	"strings"
@@ -18,7 +18,7 @@ func (bot *Bot) onMessage(_ *dg.Session, message *dg.MessageCreate) {
 		return
 	}
 
-	auth, err := bot.auth.Auth(message.Author.ID)
+	isAdmin, err := bot.auth.Verify(message.Author.ID)
 
 	if err != nil {
 		log.Printf(
@@ -30,7 +30,7 @@ func (bot *Bot) onMessage(_ *dg.Session, message *dg.MessageCreate) {
 
 	switch args[1] {
 	case "add":
-		if auth.IsAdmin {
+		if isAdmin {
 			response := bot.addRole(args[2], message.GuildID)
 			_, _ = util.Reply(bot.client, message.Message, response)
 		} else {
@@ -42,7 +42,7 @@ func (bot *Bot) onMessage(_ *dg.Session, message *dg.MessageCreate) {
 		}
 		break
 	case "delete":
-		if auth.IsAdmin {
+		if isAdmin {
 			response := bot.removeRole(args[2])
 			_, _ = util.Reply(bot.client, message.Message, response)
 		} else {

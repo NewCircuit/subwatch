@@ -1,22 +1,22 @@
 package internal
 
 import (
-	util "github.com/Floor-Gang/utilpkg"
+	util "github.com/Floor-Gang/utilpkg/config"
 	"log"
-	"strings"
 	"time"
 )
 
 type Config struct {
-	Prefix              string        `yaml:"prefix"`      // command prefix
-	NotificationChannel string        `yaml:"channel"`     // channel to report to
-	Guild               string        `yaml:"guild"`       // guild to listen to
-	Roles               []string      `yaml:"roles"`       // minimum required roles
-	Auth                string        `yaml:"auth_server"` // auth server (github.com/authserver)
-	Intervals           int           `yaml:"intervals"`   // minute-intervals to check the server
-	Delay               time.Duration `yaml:"kick_delay"`  // How many seconds to wait until to automatically kick them
-	UpVote              string        `yaml:"up_vote"`     // kick & inform
-	DownVote            string        `yaml:"down_vote"`   // discard
+	Token               string        `yaml:"token"`
+	Prefix              string        `yaml:"prefix"`
+	NotificationChannel string        `yaml:"channel"`
+	Guild               string        `yaml:"guild"`
+	Roles               []string      `yaml:"roles"`
+	Auth                string        `yaml:"auth_server"`
+	Intervals           int           `yaml:"intervals"`
+	Delay               time.Duration `yaml:"kick_delay"`
+	UpVote              string        `yaml:"up_vote"`
+	DownVote            string        `yaml:"down_vote"`
 }
 
 // This will get the current configuration file. If it doesn't exist then a
@@ -35,8 +35,8 @@ func GetConfig(location string) (config Config) {
 	}
 	err := util.GetConfig(location, &config)
 
-	if err != nil && strings.Contains(err.Error(), "default configuration") {
-		log.Fatalln("A default configuration has been made.")
+	if err != nil {
+		log.Fatalln(err)
 	}
 
 	return config

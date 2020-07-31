@@ -23,15 +23,10 @@ type Config struct {
 // new one will be made.
 func GetConfig(location string) (config Config) {
 	config = Config{
-		Prefix:              ".subwatch",
-		NotificationChannel: "",
-		Roles:               []string{"1", "2", "3", "4"},
-		Auth:                "",
-		Guild:               "",
-		UpVote:              "",
-		DownVote:            "",
-		Intervals:           5,
-		Delay:               10,
+		Prefix:    ".subwatch",
+		Roles:     []string{"1", "2", "3", "4"},
+		Intervals: 5,
+		Delay:     10,
 	}
 	err := util.GetConfig(location, &config)
 

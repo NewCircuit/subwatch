@@ -6,6 +6,7 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"log"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -66,10 +67,21 @@ func (bot *Bot) startReport(summary string, memberIDs []string) {
 	)
 	result += summary
 
-	msg, err := bot.client.ChannelMessageSend(
-		bot.config.NotificationChannel,
-		result,
-	)
+	var msg *discordgo.Message
+	var err error
+
+	if len(result) < 2000 {
+		msg, err = bot.client.ChannelMessageSend(
+			bot.config.NotificationChannel,
+			result,
+		)
+	} else {
+		msg, err = bot.client.ChannelFileSend(
+			bot.config.NotificationChannel,
+			"list.txt",
+			strings.NewReader(result),
+		)
+	}
 
 	log.Println(result)
 

@@ -63,7 +63,7 @@ func (bot *Bot) startReport(summary string, memberIDs []string) {
 		"**SubWatch Report**\n"+
 			"These members will be kicked in %d seconds. "+
 			"React with downvote to cancel.\n",
-		bot.config.Delay,
+		bot.config.Delay/time.Second,
 	)
 	result += summary
 

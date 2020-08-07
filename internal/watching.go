@@ -128,11 +128,20 @@ func (bot *Bot) startReport(summary string, memberIDs []string) {
 		toCancel := <-report.Cancel
 
 		if !toCancel {
-			results := bot.kickMembers(report.MemberIDs)
-			_, err := bot.client.ChannelMessageSend(
-				bot.config.NotificationChannel,
-				results,
-			)
+			result := bot.kickMembers(report.MemberIDs)
+
+			if len(result) < 2000 {
+				msg, err = bot.client.ChannelMessageSend(
+					bot.config.NotificationChannel,
+					result,
+				)
+			} else {
+				msg, err = bot.client.ChannelFileSend(
+					bot.config.NotificationChannel,
+					"result.txt",
+					strings.NewReader(result),
+				)
+			}
 
 			if err != nil {
 				log.Println("Failed to send conclusion to notification channel", err)

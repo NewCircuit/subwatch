@@ -1,7 +1,7 @@
 package internal
 
 import (
-	util "github.com/Floor-Gang/utilpkg/config"
+	util "github.com/NewCircuit/utilpkg/config"
 	"log"
 	"time"
 )

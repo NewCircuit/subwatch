@@ -1,7 +1,7 @@
 package internal
 
 import (
-	util "github.com/Floor-Gang/utilpkg/botutil"
+	util "github.com/NewCircuit/utilpkg/botutil"
 	dg "github.com/bwmarrin/discordgo"
 	"log"
 	"strings"

@@ -1,5 +1,6 @@
 # Subscription Watch
-This is Floor Gang bot, it watches for non-paying members
+This bot removes non-subscribed members, since Discord keeps members if they
+have any other roles upon unsubscribing.
 
 ## Usage
 ```

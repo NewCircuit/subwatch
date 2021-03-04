@@ -2,7 +2,7 @@ package internal
 
 import (
 	"fmt"
-	auth "github.com/Floor-Gang/authclient"
+	auth "github.com/NewCircuit/authclient"
 	"github.com/bwmarrin/discordgo"
 	"log"
 )
